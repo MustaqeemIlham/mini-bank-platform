@@ -1,0 +1,25 @@
+server:
+  port: 8082
+  error:
+    include-message: always
+
+spring:
+  application:
+    name: account-service
+  datasource:
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/minibank}
+    username: ${DB_USERNAME:postgres}
+    password: ${DB_PASSWORD:postgres}
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        default_schema: accounts    # same database as user-service, separate schema
+        hbm2ddl:
+          create_namespaces: true
+    open-in-view: false
+
+# Where to find user-service. Locally it is localhost; in Docker/Kubernetes we override it.
+user-service:
+  url: ${USER_SERVICE_URL:http://localhost:8081}
