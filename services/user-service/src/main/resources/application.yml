@@ -1,0 +1,22 @@
+server:
+  port: 8081
+  error:
+    include-message: always   # show our error message (e.g. "User 7 not found") in the JSON response
+
+spring:
+  application:
+    name: user-service
+  datasource:
+    # ${NAME:default} = read environment variable NAME, or use the default for local dev
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/minibank}
+    username: ${DB_USERNAME:postgres}
+    password: ${DB_PASSWORD:postgres}
+  jpa:
+    hibernate:
+      ddl-auto: update          # let JPA create/alter tables from the entity (fine for learning, not for prod)
+    properties:
+      hibernate:
+        default_schema: users   # this service's tables live in the "users" schema
+        hbm2ddl:
+          create_namespaces: true   # create the "users" schema if it does not exist yet
+    open-in-view: false

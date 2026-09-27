@@ -14,3 +14,17 @@ trying to build a mini bank platform using spring boot
 ## What broke / how I fixed it
 (e.g. did Java 17 vs 21 cause trouble? Did WSL or Docker need a restart?)
 
+
+# PostgreSQL (already running; after a reboot use: docker start minibank-postgres)
+# For reference, this is how I created it:
+docker run --name minibank-postgres -e POSTGRES_PASSWORD=postgres -e POSTGRES_DB=minibank -p 5432:5432 -d postgres:16
+
+# Terminal 1
+cd services\user-service; .\mvnw spring-boot:run
+# Terminal 2
+cd services\account-service; .\mvnw spring-boot:run
+
+http://localhost:8081/swagger-ui.html 
+http://localhost:8082/swagger-ui.html
+
+
