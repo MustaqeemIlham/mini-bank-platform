@@ -30,10 +30,12 @@ class AccountServiceTest {
         when(repository.findById(1L)).thenReturn(Optional.of(from));
         when(repository.findById(2L)).thenReturn(Optional.of(to));
 
-        service.transfer(1L, 2L, new BigDecimal("30.00"));
+        Receipt receipt = service.transfer(1L, 2L, new BigDecimal("30.00"));
 
         assertThat(from.getBalance()).isEqualByComparingTo("70.00");
         assertThat(to.getBalance()).isEqualByComparingTo("50.00");
+        assertThat(receipt.transferId()).isNotBlank();
+        assertThat(receipt.amount()).isEqualByComparingTo("30.00");
     }
 
     @Test
