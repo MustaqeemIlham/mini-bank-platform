@@ -23,3 +23,9 @@ spring:
 # Where to find user-service. Locally it is localhost; in Docker/Kubernetes we override it.
 user-service:
   url: ${USER_SERVICE_URL:http://localhost:8081}
+
+# Where transfer receipts go. No keys here: the AWS SDK finds credentials by itself.
+receipts:
+  bucket: ${S3_BUCKET:minibank-receipts}
+  region: ${AWS_REGION:ap-southeast-1}
+  endpoint: ${S3_ENDPOINT:}   # LocalStack: http://localhost:4566 | empty = real AWS S3

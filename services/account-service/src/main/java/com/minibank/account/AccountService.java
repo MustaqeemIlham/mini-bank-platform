@@ -6,6 +6,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.math.BigDecimal;
+import java.time.Instant;
+import java.util.UUID;
 
 @Service
 public class AccountService {
@@ -34,7 +36,7 @@ public class AccountService {
 
     // All-or-nothing: if anything fails half way, the database rolls BOTH accounts back
     @Transactional
-    public void transfer(Long fromId, Long toId, BigDecimal amount) {
+    public Receipt transfer(Long fromId, Long toId, BigDecimal amount) {
         if (fromId.equals(toId)) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Cannot transfer to the same account");
         }
@@ -46,6 +48,7 @@ public class AccountService {
         }
         from.withdraw(amount);
         to.deposit(amount);
+        return new Receipt(UUID.randomUUID().toString(), fromId, toId, amount, Instant.now());
     }
 
     public Account get(Long accountId) {

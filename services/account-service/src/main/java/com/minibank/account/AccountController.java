@@ -21,9 +21,11 @@ public class AccountController {
     public record TransferRequest(@NotNull Long fromId, @NotNull Long toId, @NotNull @Positive BigDecimal amount) {}
 
     private final AccountService service;
+    private final ReceiptStorage receiptStorage;
 
-    public AccountController(AccountService service) {
+    public AccountController(AccountService service, ReceiptStorage receiptStorage) {
         this.service = service;
+        this.receiptStorage = receiptStorage;
     }
 
     @PostMapping("/api/accounts")
@@ -38,9 +40,11 @@ public class AccountController {
     }
 
     @PostMapping("/api/transfers")
-    public TransferRequest transfer(@Valid @RequestBody TransferRequest request) {
-        service.transfer(request.fromId(), request.toId(), request.amount());
-        return request; // echo back what was transferred; Day 4 adds a transferId and time
+    public Receipt transfer(@Valid @RequestBody TransferRequest request) {
+        Receipt receipt = service.transfer(request.fromId(), request.toId(), request.amount());
+        // Upload only AFTER transfer() returned, i.e. after the database transaction committed
+        receiptStorage.save(receipt);
+        return receipt;
     }
 
     @GetMapping("/api/accounts/{id}")
